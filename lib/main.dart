@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_compass/flutter_compass.dart';
+import 'package:logger/logger.dart';
 
 void main() => runApp(CompassDemo());
 
@@ -29,6 +30,7 @@ class Compass extends StatefulWidget {
 
 class _CompassState extends State<Compass> with SingleTickerProviderStateMixin {
 
+	var _logger = Logger();
 	double _heading = 0;
 
 	String get _readout => _heading.toStringAsFixed(0) + '°';
@@ -40,7 +42,10 @@ class _CompassState extends State<Compass> with SingleTickerProviderStateMixin {
 		FlutterCompass.events.listen(_onData);
 	}
 	
-	void _onData(double x) => setState(() { _heading = x; });
+	void _onData(CompassEvent event) => setState(() { 
+		_logger.d('Updating heading: ${event.heading}');
+		_heading = event.heading; 
+	});
 
 	final TextStyle _style = TextStyle(
 		color: Colors.red[50].withOpacity(0.9), 
